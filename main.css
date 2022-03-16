@@ -1,0 +1,14 @@
+header > nav > ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+header > nav > ul > li > a {
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+body {
+  color: red;
+}

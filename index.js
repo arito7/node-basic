@@ -1,39 +1,32 @@
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
+const express = require('express');
+const app = express();
+const port = 8080;
 
-const server = http.createServer((req, res) => {
-  const q = url.parse(req.url, true);
-  let filename = '';
-
-  switch (q.pathname) {
-    case '/about':
-      filename = 'about.html';
-      break;
-    case '/':
-      filename = 'index.html';
-      break;
-    case '/contact-me':
-      filename = 'contact-me.html';
-      break;
-    case '/main.css':
-      filename = 'main.css';
-      break;
-    default:
-      filename = '404.html';
-  }
-
-  fs.readFile(filename, (err, data) => {
-    if (filename.match(/.css$/i)) {
-      res.writeHead(200, { 'Content-Type': 'text/css' });
-    } else if (filename.match(/.html$/i)) {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-    }
-    res.write(data);
-    return res.end();
-  });
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
 });
 
-server.listen(8080, () => {
+app.get('/main.css', (req, res) => {
+  res.sendFile('./main.css', { root: __dirname });
+});
+
+app.get('/', (req, res) => {
+  res.sendFile('./index.html', { root: __dirname });
+});
+
+app.get('/about', (req, res) => {
+  res.sendFile('./about.html', { root: __dirname });
+});
+
+app.get('/contact-me', (req, res) => {
+  res.sendFile('./contact-me.html', { root: __dirname });
+});
+
+app.use((req, res) => {
+  res.sendFile('./404.html', { root: __dirname });
+});
+
+app.listen(port, () => {
   console.log('connected');
 });
